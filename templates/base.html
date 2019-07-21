@@ -2,20 +2,31 @@
 <html>
 <head>
     <title>{{title}}</title>
-    <style>
-        h1{
-            text-align: center;
-        }
-        .error{
-            color: red;
-        }
-    </style>
+    <link rel='stylesheet' type='text/css', href='style.css'/>
 </head>
 <body>
-    <nav>
-        <a href="/blog">Main Blog Page</a> | 
-        <a href="/newpost">Add a Blog Entry</a>
-    </nav>
+    <div>
+        <nav>
+            <h1><a href="/">HOME</a></h1>
+            <a href="/blog">All Posts</a>
+            <br>
+            <a href="/newpost">New Post</a>
+            <br>
+            <br>
+            <a href="/logout">Logout</a>
+            <br>
+            <a href="/login">Login</a>
+        </nav>
+    </div>
+          
+    
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        <ul>
+        {% for category,message in messages %}
+            <li class="{{category}}">{{message}}</li>
+        {% endfor %}
+        </ul>
+    {% endwith %}
 
     {% block content %}
     {% endblock %}
