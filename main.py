@@ -68,20 +68,23 @@ def signup():
     
     return render_template('signup.html')
 
-        # TODO - validate user's data
-
-@app.route('/blog')
+@app.route('/blog', methods=['POST', 'GET'])
 def blog():
     blog_id = request.args.get('id')
-    
-    if blog_id == None:
-        posts = Blog.query.all()
-        return render_template('blog.html', posts=posts, title='Blogz')
-    else:
-        post = Blog.query.filter_by(id=blog_id).all()
-        return render_template('singleUser.html', post=post, title='Blog Entry')
+    user_id = request.args.get('user')
+    posts = Blog.query.all()
+    title = Blog.query.get('title')
 
-    return render_template('blog.html')
+    if blog_id:
+        post = Blog.query.get(blog_id)
+        return render_template('singleUser.html', post=post, header="User Posts")
+    
+    if user_id:
+        posts = Blog.query.filter_by(owner_id=user_id)
+        return render_template('blog.html', posts=posts)
+
+    return render_template('blog.html', posts=posts, header = 'All Blog Posts' )
+    
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
@@ -100,8 +103,9 @@ def newpost():
         if not body_error and not title_error:
             new_entry = Blog(blog_title, blog_body, owner=owner)     
             db.session.add(new_entry)
-            db.session.commit()        
-            return redirect('/blog?id={}'.format(new_entry.id)) 
+            db.session.commit()
+            post_id = "/blog?id=" + str(new_entry.id)       
+            return redirect(post_id)
         else:
             return render_template('newpost.html', title='New Entry', title_error=title_error, body_error=body_error, blog_title=blog_title, blog_body=blog_body)
     

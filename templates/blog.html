@@ -5,17 +5,12 @@
     <h1 style='color:darkred;'>Blogz</h1>
     <hr>
 
-    {% if posts|length == 0 %}
-    <h3>No blog posts yet</h3>
+    {% for post in posts %}
+        <a href="/blog?id={{post.id}}"><h2>{{post.title}}</h2></a>
+        <p>{{post.body}}</p>
+        <p><small>written by <a href="/blog?user={{post.owner_id}}">{{post.owner.username}}</a></small></p>
     
-    {% else %}
-    
-        {% for post in blog %}
-            <a href="/blog?id={{post.id}}"><h2>{{post.title}}</h2></a>
-            <p>{{post.body}}</p>
-            <p><small>written by <a href="/blog?user={{post.owner_id}}">{{post.owner.username}}</a></small></p>
-        
-        {% endfor %}  
-    {% endif %}
+    {% endfor %}
+   
 
 {% endblock %}
